@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Smart Search Engine</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <h1>Smart File Search Engine</h1>
+
+    <form action="/search">
+
+        <input
+            type="text"
+            name="query"
+            placeholder="Search files..."
+            required
+        >
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
+
+    <div class="results">
+
+    {% if results %}
+
+        {% for file in results %}
+
+        <div class="card">
+
+            <h2>{{ file[0] }}</h2>
+
+            <p>{{ file[1] }}</p>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <h3>No results found</h3>
+
+    {% endif %}
+
+</div>
+</body>
+
+</html>
