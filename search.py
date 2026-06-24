@@ -5,23 +5,39 @@ def search_files(query):
 
     start = time.time()
 
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
+    try:
 
-    cursor.execute("""
-    SELECT filename, content,
-    LENGTH(content) - LENGTH(REPLACE(content, ?, '')) as score
-    FROM files
-    WHERE content LIKE ?
-    ORDER BY score DESC
-    """, (query, '%' + query + '%'))
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
 
-    results = cursor.fetchall()
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS files (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            filename TEXT UNIQUE,
+            content TEXT
+        )
+        """)
 
-    conn.close()
+        cursor.execute("""
+        SELECT filename, content,
+        LENGTH(content) - LENGTH(REPLACE(content, ?, '')) as score
+        FROM files
+        WHERE content LIKE ?
+        ORDER BY score DESC
+        """, (query, '%' + query + '%'))
 
-    end = time.time()
+        results = cursor.fetchall()
 
-    print("Search completed in:", end - start, "seconds")
+        conn.close()
 
-    return results
+        end = time.time()
+
+        print("Search completed in:", end - start)
+
+        return results
+
+    except Exception as e:
+
+        print("ERROR:", e)
+
+        return []

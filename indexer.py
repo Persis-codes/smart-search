@@ -14,18 +14,22 @@ CREATE TABLE IF NOT EXISTS files (
 
 folder = "files"
 
-for file in os.listdir(folder):
+if os.path.exists(folder):
 
-    path = os.path.join(folder, file)
+    for file in os.listdir(folder):
 
-    with open(path, "r", encoding="utf-8") as f:
+        path = os.path.join(folder, file)
 
-        content = f.read()
+        if os.path.isfile(path):
 
-        cursor.execute("""
-        INSERT OR REPLACE INTO files (filename, content)
-        VALUES (?, ?)
-        """, (file, content))
+            with open(path, "r", encoding="utf-8") as f:
+
+                content = f.read()
+
+                cursor.execute("""
+                INSERT OR REPLACE INTO files (filename, content)
+                VALUES (?, ?)
+                """, (file, content))
 
 conn.commit()
 conn.close()
